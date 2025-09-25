@@ -47,6 +47,100 @@ rag-development/
 - 基于检索结果生成准确答案
 - 支持上下文理解
 
+## 环境要求
+
+### 系统要求
+- Python 3.8+
+- Elasticsearch 7.0+
+- 至少8GB内存（推荐16GB+）
+
+### 外部服务依赖
+- Elasticsearch集群
+- OpenAI API（用于答案生成）
+- 外部向量化服务（用于文本和图像向量化）
+
+## 安装步骤
+
+### 1. 克隆项目
+```bash
+git clone <repository-url>
+cd local-RAG
+```
+
+### 2. 创建虚拟环境
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# 或
+venv\Scripts\activate     # Windows
+```
+
+### 3. 安装依赖
+```bash
+pip install -r requirements.txt
+```
+
+### 4. 启动Elasticsearch
+确保Elasticsearch服务正在运行：
+```bash
+# 使用Docker启动Elasticsearch
+docker run -d --name elasticsearch -p 9200:9200 -e "discovery.type=single-node" elasticsearch:7.17.0
+
+# 或使用本地安装的Elasticsearch
+elasticsearch
+```
+
+### 5. 配置服务
+编辑 `config.py` 文件，设置：
+- Elasticsearch连接信息
+- OpenAI API密钥
+- 外部向量化服务地址
+
+## 运行程序
+
+### 方式一：命令行运行
+```bash
+# 启动RAG系统
+python rag.py
+
+# 运行测试
+python test.py
+```
+
+### 方式二：API服务模式
+```bash
+# 启动Flask API服务（默认端口5000）
+python rag.py --api
+```
+
+然后可以通过HTTP请求使用：
+```bash
+# 索引PDF文档
+curl -X POST http://localhost:5000/index \
+  -H "Content-Type: application/json" \
+  -d '{"pdf_path": "path/to/your/document.pdf"}'
+
+# 查询文档
+curl -X POST http://localhost:5000/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "你的问题"}'
+```
+
+### 方式三：代码集成
+```python
+from rag import RAGSystem
+
+# 初始化RAG系统
+rag = RAGSystem()
+
+# 索引PDF文档
+rag.index_pdf("path/to/document.pdf")
+
+# 查询文档
+answer = rag.query("你的问题")
+print(answer)
+```
+
 ## 配置说明
 
 ### Elasticsearch配置
