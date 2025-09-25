@@ -1,0 +1,11 @@
+pdfplumber
+PyMuPDF
+camelot-py[cv]
+pandas
+tiktoken
+numpy
+elasticsearch
+requests
+openai
+flask
+opencv-python
